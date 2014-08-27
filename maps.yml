@@ -1,0 +1,48 @@
+mainlobby: 0 33 0
+maps:
+  library:
+    tag: libr
+    displayName: Library
+    world: MigDevLobby
+    lobby: 1000 73 1000
+    center: 1000 73 1000
+    center-maxDistance: 100
+    mapBottom: 0
+    gametypes:
+    - gole
+    - ends
+    spawnpoints:
+    - 989 66 989
+    - 1011 66 1011
+    - 1003 66 997
+    teamspawnpoints:
+      ends: []
+  townsquare:
+    tag: twns
+    displayName: Townsquare
+    world: MigDevLobby
+    lobby: 67 88 1998
+    center: 67 88 1998
+    center-maxDistance: 200
+    mapBottom: 0
+    gametypes:
+    - gole
+    spawnpoints:
+    - -26 82 2012
+    - -21 82 1984
+    - -15 88 1986
+    - -4 81 1959
+    - 77 88 1961
+    - 79 88 1987
+    - 81 88 2014
+    - 20 82 2020
+    - 36 82 2021
+    - 52 82 2021
+    - 73 81 2019
+    - 55 87 2003
+    - 33 82 1992
+    - -19 82 1965
+    - 18 82 1963
+    - 38 82 1969
+    teamspawnpoints:
+      ends: []

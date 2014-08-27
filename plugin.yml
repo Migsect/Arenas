@@ -1,0 +1,32 @@
+name: Arenas
+main: me.migsect.Arenas.Arenas
+version: 0.0
+description: This plugin transforms the server into an adaptable and dynamic arena server.
+author: Migsect
+commands: 
+    a:
+        description: This is the hub command for the plugin.
+        usage: /<command>
+permissions:
+    arenas.*:
+        description: Gives access to all PlayerGroups commands.
+        children:
+            pgroups.admin: true
+            pgroups.user: true
+    arenas.admin:
+        description:
+        children:
+            arenas.list: true
+            arenas.info: true
+            arenas.commands: true
+            arenas.load: true
+            arenas.start: true
+            arenas.gm: true
+        default: OP
+    arenas.user:
+        description:
+        children:
+            arenas.list: true
+            arenas.info: true
+            arenas.commands: true
+        default: true

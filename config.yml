@@ -1,0 +1,7 @@
+Commands:
+    ErrorMessage:
+        Exists: "&cThat Command does not exist."
+        Sender: "&cYou cannot execute that command."
+        Arguments: "&cYhat command does not have the right number of arugments."
+        WrongArguments: "&cSorry, the arguments you entered are not correct."
+        Permission: "&cYou do not have permission to use that command."
