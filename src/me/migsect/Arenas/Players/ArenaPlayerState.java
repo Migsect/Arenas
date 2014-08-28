@@ -171,7 +171,7 @@ public abstract class ArenaPlayerState
 	public void setCanSprint(boolean bool){canSprint = bool;}
 	public void setCanSneak(boolean bool){canSneak = bool;}
 	
-	final public void applyEffects(ArenaPlayer player)
+	final public void equipPlayer(ArenaPlayer player)
 	{
 		for(int i = 0; i < effects.size(); i++)
 		{

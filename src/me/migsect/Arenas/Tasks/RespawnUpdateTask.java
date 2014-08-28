@@ -16,8 +16,7 @@ public class RespawnUpdateTask extends BukkitRunnable
 	@Override
 	public void run()
 	{
-		if(player.hasTeam()) player.getTeam().grantEffects(player);
-		if(player.hasState()) player.getState().applyEffects(player);
+		if(player.hasState()) player.getState().equipPlayer(player);
 	}
 	
 	

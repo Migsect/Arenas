@@ -35,11 +35,9 @@ public class StateSpectator extends ArenaPlayerState
 	@Override
 	public void enterState(ArenaPlayer player)
 	{
-		removeAllEffects(player);
 		player.getPlayer().setAllowFlight(true);
 		handler.addHidden(player);
 		player.getPlayer().setGameMode(mode);
-		applyEffects(player);
 	}
 
 	@Override

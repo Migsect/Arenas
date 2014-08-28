@@ -12,6 +12,7 @@ import me.migsect.Arenas.Arenas;
 import me.migsect.Arenas.Players.ArenaPlayer;
 import me.migsect.Arenas.Players.StateGM;
 import me.migsect.Arenas.Players.StateGhost;
+import me.migsect.Arenas.Players.StateHandler;
 import me.migsect.Arenas.Players.StateLobby;
 import me.migsect.Arenas.Players.StatePlaying;
 import me.migsect.Arenas.Tasks.TaskHandler;
@@ -28,6 +29,7 @@ public class GameHandler
 	private TaskHandler taskHandler;
 	private SpawnHandler spawnHandler;
 	private ScoreHandler scoreHandler;
+	private StateHandler stateHandler;
 	
 	private Scoreboard board;
 	private HashMap<String,ArenaGame> gameTypes;
@@ -37,10 +39,6 @@ public class GameHandler
 	
 	private List<ArenaPlayer> hiddenPlayers;
 	
-	private StateGM stateGM = new StateGM(this);
-	private StateGhost stateGhost = new StateGhost(this);
-	private StateLobby stateLobby = new StateLobby(this);
-	private StatePlaying statePlaying = new StatePlaying(this);
 	
 	
 	// Constructor
@@ -55,10 +53,13 @@ public class GameHandler
 		spawnHandler = new SpawnHandler(this);
 		scoreHandler = new ScoreHandler(this);
 		mapHandler = new MapHandler(plugin, this);
+		stateHandler = new StateHandler(this);
+		
 		hiddenPlayers = new ArrayList<ArenaPlayer>();
 		
 		loadedGame = null;
 		
+		registerStates();
 	}
 	
 	
@@ -114,6 +115,13 @@ public class GameHandler
 	public boolean isHidden(ArenaPlayer player)
 	{
 		return hiddenPlayers.contains(player);
+	}
+	public void registerStates()
+	{
+		stateHandler.registerUniversal(new StateGM(this));
+		stateHandler.registerUniversal(new StateGM(this));
+		stateHandler.registerUniversal(new StateGM(this));
+		stateHandler.registerUniversal(new StateGM(this));
 	}
 	// registerPlayer() will add the player to the player list.  
 	public void registerPlayer(Player player)
@@ -341,6 +349,10 @@ public class GameHandler
 	public ScoreHandler getScoreHandler()
 	{
 		return scoreHandler;
+	}
+	public StateHandler getStateHandler()
+	{
+		return stateHandler;
 	}
 	public List<ArenaPlayer> getHiddenPlayers()
 	{
