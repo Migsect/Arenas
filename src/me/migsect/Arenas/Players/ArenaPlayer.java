@@ -20,6 +20,7 @@ public class ArenaPlayer
 	ArenaGame game = null;
 	ArenaTeam team = null;
 	ArenaPlayerState state;
+	ArenaPlayerLoadout loadout;
 	int kills;
 	int deaths;
 	
@@ -128,10 +129,20 @@ public class ArenaPlayer
 		this.state = state;
 		this.state.enterState(this);
 	}
+	public void setLoadout(ArenaPlayerLoadout loadout)
+	{
+		this.player.getInventory().clear();
+		this.loadout = loadout;
+	}
 	public ArenaPlayerState getState(){return this.state;}
+	public ArenaPlayerLoadout getLoadout(){return this.loadout;}
 	public boolean hasState()
 	{
 		return !(state == null);
+	}
+	public boolean hasLoadout()
+	{
+		return !(loadout == null);
 	}
 	// combat allowances sets
 	public void setCanDamage(boolean bool){canDamage = bool;}

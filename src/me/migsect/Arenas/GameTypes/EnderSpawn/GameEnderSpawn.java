@@ -51,7 +51,7 @@ public class GameEnderSpawn extends ArenaGame
 		miners = new TeamMiners(plugin, this);
 		teams.add(miners);
 	}
-
+	
 	@Override
 	public void gameInitiate()
 	{

@@ -29,14 +29,14 @@ public class TeamGolem extends ArenaTeam
 		super(plugin, game, tag);
 		teamLimit = 1;
 		
-		PotionEffect effect1 = new PotionEffect(PotionEffectType.SATURATION, 3600, 5, false);
-		PotionEffect effect2 = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 3600, 0, false);
-		PotionEffect effect3 = new PotionEffect(PotionEffectType.SLOW, 3600, 1, false);
-		PotionEffect effect4 = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 3600, 0, false);
-		PotionEffect effect5 = new PotionEffect(PotionEffectType.HEALTH_BOOST, 3600, 4, false);
-		PotionEffect effect6 = new PotionEffect(PotionEffectType.WATER_BREATHING, 3600, 0, true);
-		PotionEffect effect7 = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 5, 4, true);
-		PotionEffect effect8 = new PotionEffect(PotionEffectType.REGENERATION, 5, 4, true);
+		PotionEffect effect1 = new PotionEffect(PotionEffectType.SATURATION, 72000, 5, false);
+		PotionEffect effect2 = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 72000, 0, false);
+		PotionEffect effect3 = new PotionEffect(PotionEffectType.SLOW, 72000, 1, false);
+		PotionEffect effect4 = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 72000, 0, false);
+		PotionEffect effect5 = new PotionEffect(PotionEffectType.HEALTH_BOOST, 72000, 4, false);
+		PotionEffect effect6 = new PotionEffect(PotionEffectType.WATER_BREATHING, 72000, 0, true);
+		PotionEffect effect7 = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 4, true);
+		PotionEffect effect8 = new PotionEffect(PotionEffectType.REGENERATION, 100, 4, true);
 		effects.add(effect1);
 		effects.add(effect2);
 		effects.add(effect3);
@@ -52,7 +52,10 @@ public class TeamGolem extends ArenaTeam
 		
 		this.genLoadouts();
 	}
-
+	public void setLoadout(ArenaPlayer player)
+	{
+		player.setLoadout(loadout);
+	}
 	@Override
 	public void onListenPlayerDeath(ArenaPlayer player)
 	{

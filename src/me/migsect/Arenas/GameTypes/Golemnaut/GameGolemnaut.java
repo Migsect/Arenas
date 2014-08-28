@@ -56,6 +56,33 @@ public class GameGolemnaut extends ArenaGame
 		villagers = new TeamVillagers(plugin, this, "vill");
 		teams.add(villagers);
 	}
+	// For selecting the player who killed a golem.
+	private void switchGolem(ArenaPlayer player)
+	{
+		List<ArenaPlayer> oldGolems = new ArrayList<ArenaPlayer>(golemnaut.getPlayers());
+		golemnaut.removeAllPlayers();
+		if(!oldGolems.isEmpty()) 
+		{
+			villagers.addPlayers(oldGolems);
+			for(int i = 0; i < oldGolems.size(); i++)
+			{
+				villagers.setLoadout(oldGolems.get(i));
+			}
+		}
+		player.getTeam().removePlayer(player);
+		golemnaut.addPlayer(player);
+		golemnaut.setLoadout(player);
+		player.getLoadout().equipPlayer(player);
+		gameHandler.messageAllPlayers(ArenaHelper.colorEncoding(player.getPlayer().getDisplayName() + "&e is now the Golemnaut!"));
+	
+	}
+	// For selecting a random player.  This is on the case of a accidental golem death.
+	private void randomGolem()
+	{
+		List<ArenaPlayer> players = villagers.getPlayers();
+		Random rand = new Random();
+		switchGolem(players.get(rand.nextInt(players.size()-1)));
+	}
 
 	@Override
 	public void gameInitiate()
@@ -66,9 +93,20 @@ public class GameGolemnaut extends ArenaGame
 	@Override
 	public void gameStart()
 	{
+		if(gameHandler.getActivePlayers().size() < 2)
+		{
+			gameHandler.messageAllPlayers(ArenaHelper.colorEncoding("&4The game cannot be started because there aren't enough players."));
+			return;
+		}
 		this.isRunning = true;
 		gameHandler.messageAllPlayers("Game has been started");
-		
+		villagers.addPlayers(this.gameHandler.getActivePlayers());
+		for(int i = 0; i < this.gameHandler.getActivePlayers().size(); i++)
+		{
+			villagers.setLoadout(this.gameHandler.getActivePlayers().get(i));
+			this.respawnPlayer(this.gameHandler.getActivePlayers().get(i));
+		}
+		randomGolem();
 	}
 
 	@Override
@@ -80,6 +118,8 @@ public class GameGolemnaut extends ArenaGame
 	public void gameEnd()
 	{
 		this.isRunning = false;
+		villagers.removeAllPlayers();
+		golemnaut.removeAllPlayers();
 	}
 
 	@Override
@@ -102,6 +142,8 @@ public class GameGolemnaut extends ArenaGame
 	{
 		gameHandler.setStatePlaying(player);
 		player.getPlayer().teleport(spawnHandler.smartSpawn(100));
+		if(player.hasLoadout()) player.getLoadout().equipPlayer(player);
+		if(player.hasTeam()) player.getTeam().grantEffects(player);
 	}
 
 	@Override
@@ -117,25 +159,6 @@ public class GameGolemnaut extends ArenaGame
 	@Override
 	public void onTagTask(String tag, List<ArenaPlayer> players)
 	{
-	}
-
-	private void switchNaut(ArenaPlayer player)
-	{
-		villagers.removePlayer(player);
-		List<ArenaPlayer> players = new ArrayList<ArenaPlayer>(golemnaut.getTeamPlayers());
-		golemnaut.removeAllPlayers();
-		for(int i = 0; i < players.size() ; i ++)
-		{
-			villagers.addPlayer(players.get(i));
-		}
-		golemnaut.addPlayer(player);
-	}
-	
-	@SuppressWarnings("unused")
-	private void randomNaut()
-	{
-		Random rand = new Random();
-		switchNaut(gameHandler.getActivePlayers().get(rand.nextInt(gameHandler.getActivePlayers().size())));
 	}
 
 	@Override
@@ -267,11 +290,7 @@ public class GameGolemnaut extends ArenaGame
 	{
 		if(killed.getTeam() == golemnaut)
 		{
-			golemnaut.removePlayer(killed);
-			villagers.removePlayer(player);
-			golemnaut.addPlayer(player);
-			villagers.addPlayer(killed);
-			
+			switchGolem(player);
 		}
 	}
 

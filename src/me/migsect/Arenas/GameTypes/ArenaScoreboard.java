@@ -11,10 +11,10 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class ArenaScoreboard
 {
-	GameHandler handler;
-	Scoreboard board;
-	HashMap<String, ArenaScorelist> scores;
-	List<ArenaPlayer> hiddenPlayers = new ArrayList<ArenaPlayer>();
+	private GameHandler handler;
+	private Scoreboard board;
+	private HashMap<String, ArenaScorelist> scores;
+	private List<ArenaPlayer> hiddenPlayers = new ArrayList<ArenaPlayer>(); // TODO: Make it so this isn't a memory leak.
 	
 	public ArenaScoreboard(GameHandler handler)
 	{
@@ -25,7 +25,7 @@ public class ArenaScoreboard
 	
 	public void newScoreList(String name, boolean include)
 	{
-		ArenaScorelist scorelist = new ArenaScorelist(name);
+		ArenaScorelist scorelist = new ArenaScorelist(this,name);
 		if(include = true)
 		{
 			List<ArenaPlayer> players = handler.getActivePlayers();
@@ -36,29 +36,39 @@ public class ArenaScoreboard
 		}
 	}
 	
+	public Scoreboard getVanillaScoreboard()
+	{
+		return board;
+	}
+	
 	public void deleteScoreList(String string)
 	{
 		scores.remove(string);
 	}
-	
-	public void setScore(String score, ArenaPlayer player, int newScore)
-	{
-		
-	}
-	public void addScore(String score, ArenaPlayer player, int addScore)
-	{
-		
-	}
-	public int getScore(String score, ArenaPlayer player)
+	public int getScoreList(String score, ArenaPlayer player)
 	{
 		return scores.get(score).getScore(player);
 	}
+	public boolean isViewable(ArenaPlayer player)
+	{
+		return !hiddenPlayers.contains(player);
+	}
 	public void includePlayer(ArenaPlayer player)
 	{
-		
+		if(hiddenPlayers.contains(player)) hiddenPlayers.remove(player);
 	}
 	public void discludePlayer(ArenaPlayer player)
 	{
-		
+		hiddenPlayers.add(player);
+	}
+
+	public List<ArenaPlayer> getHiddenPlayers()
+	{
+		return hiddenPlayers;
+	}
+
+	public void setHiddenPlayers(List<ArenaPlayer> hiddenPlayers)
+	{
+		this.hiddenPlayers = hiddenPlayers;
 	}
 }

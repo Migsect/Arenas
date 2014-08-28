@@ -28,7 +28,7 @@ public abstract class ArenaTeam
 	protected int teamLimit = 1;
 	protected List<ArenaPlayer> members;
 	protected List<PotionEffect> effects;
-	protected List<ArenaPlayerLoadout> loadouts;
+	protected List<ArenaPlayerLoadout> loadouts = new ArrayList<ArenaPlayerLoadout>();
 
   //combat allowances
 	boolean canDamage = true;
@@ -93,13 +93,23 @@ public abstract class ArenaTeam
 	final public boolean canSprint(){return canSprint;}
 	final public boolean canSneak(){return canSneak;}
 	
-	
+	final public List<ArenaPlayer> getPlayers()
+	{
+		return members;
+	}
 	final public void addPlayer(ArenaPlayer player)
 	{
 		members.add(player);
 		team.addPlayer(player.getPlayer());
 		player.setTeam(this);
 		this.grantEffects(player);
+	}
+	final public void addPlayers(List<ArenaPlayer> players)
+	{
+		for(int i = 0; i < players.size(); i++)
+		{
+			this.addPlayer(players.get(i));
+		}
 	}
 	final public void removePlayer(ArenaPlayer player)
 	{
@@ -123,7 +133,10 @@ public abstract class ArenaTeam
 	// We are seperating the handling of the effect granting per team because it's annoying.
 	final public void grantEffects(ArenaPlayer player)
 	{
-		
+		for(int i = 0; i < effects.size(); i++)
+		{
+			player.getPlayer().addPotionEffect(effects.get(i));
+		}
 	}
 	// A listens by a team will ONLY be for its own team members.
 	//   As such it should be implied that only events caused by its team members will be sent.

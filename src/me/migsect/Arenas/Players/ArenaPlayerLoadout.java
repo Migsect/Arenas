@@ -43,7 +43,7 @@ public class ArenaPlayerLoadout
 		
 		for(int i = 0; i < inventory.size(); i++)
 		{
-			player.getPlayer().getInventory().setItem(44 - i, inventory.get(i));
+			player.getPlayer().getInventory().setItem(i, inventory.get(i));
 		}
 		for(int i = 0; i < effects.size(); i++)
 		{

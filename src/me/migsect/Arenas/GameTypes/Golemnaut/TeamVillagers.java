@@ -2,7 +2,9 @@ package me.migsect.Arenas.GameTypes.Golemnaut;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Projectile;
@@ -15,10 +17,11 @@ import me.migsect.Arenas.Arenas;
 import me.migsect.Arenas.GameTypes.ArenaGame;
 import me.migsect.Arenas.GameTypes.ArenaTeam;
 import me.migsect.Arenas.Players.ArenaPlayer;
+import me.migsect.Arenas.Players.ArenaPlayerLoadout;
 
 public class TeamVillagers extends ArenaTeam
 {
-
+	private ArenaPlayerLoadout loadout = new ArenaPlayerLoadout("Villager Loadout", "vill", Material.STICK);
 	public TeamVillagers(Arenas plugin, ArenaGame game, String tag)
 	{
 		super(plugin, game, tag);
@@ -34,8 +37,14 @@ public class TeamVillagers extends ArenaTeam
 		team.setPrefix("" + ChatColor.GREEN);
 		team.setCanSeeFriendlyInvisibles(true);
 		team.setAllowFriendlyFire(false);
+		
+		genLoadouts();
 	}
 
+	public void setLoadout(ArenaPlayer player)
+	{
+		player.setLoadout(loadout);
+	}
 	@Override
 	public void onListenPlayerDeath(ArenaPlayer player)
 	{
@@ -186,5 +195,28 @@ public class TeamVillagers extends ArenaTeam
 	public void onListenPlayerPlaceBlock(ArenaPlayer player, Block block)
 	{
 	}
+	private void genLoadouts()
+	{
+		loadout = new ArenaPlayerLoadout("Golem", "gole", Material.IRON_BLOCK);
+		
+		ItemStack helm = new ItemStack(Material.IRON_HELMET);
+		ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
+		ItemStack legs = new ItemStack(Material.LEATHER_LEGGINGS);
+		ItemStack boots = new ItemStack(Material.IRON_BOOTS);
+		loadout.setHelm(helm);
+		loadout.setChest(chest);
+		loadout.setLegs(legs);
+		loadout.setBoots(boots);
+		
+		ItemStack sword = new ItemStack(Material.IRON_SWORD);
+		sword.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
+		ItemStack bow = new ItemStack(Material.BOW);
+		bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
+		ItemStack arrow = new ItemStack(Material.ARROW);
+		
+		loadout.addItem(sword);
+		loadout.addItem(bow);
+		loadout.addItem(arrow);
 
+	}
 }

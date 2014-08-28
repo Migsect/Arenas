@@ -24,11 +24,11 @@ public class TeamEnderSpawn extends ArenaTeam
 		super(plugin, game, "ends");
 		teamLimit = 1;
 		
-		PotionEffect effect1 = new PotionEffect(PotionEffectType.HUNGER, 3600, 1, false);
-		PotionEffect effect2 = new PotionEffect(PotionEffectType.INVISIBILITY, 3600, 0, false);
-		PotionEffect effect3 = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 3600, 1, false);
-		PotionEffect effect4 = new PotionEffect(PotionEffectType.SPEED, 3600, 2, false);
-		PotionEffect effect5 = new PotionEffect(PotionEffectType.JUMP, 3600, 2, false);
+		PotionEffect effect1 = new PotionEffect(PotionEffectType.HUNGER, 72000, 1, false);
+		PotionEffect effect2 = new PotionEffect(PotionEffectType.INVISIBILITY, 72000, 0, false);
+		PotionEffect effect3 = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 72000, 1, false);
+		PotionEffect effect4 = new PotionEffect(PotionEffectType.SPEED, 72000, 2, false);
+		PotionEffect effect5 = new PotionEffect(PotionEffectType.JUMP, 72000, 2, false);
 		effects.add(effect1);
 		effects.add(effect2);
 		effects.add(effect3);
