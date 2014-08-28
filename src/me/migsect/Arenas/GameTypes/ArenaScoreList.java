@@ -10,7 +10,7 @@ import org.bukkit.scoreboard.Objective;
 
 import me.migsect.Arenas.Players.ArenaPlayer;
 
-public class ArenaScorelist
+public class ArenaScoreList
 {
 	private ArenaScoreboard board;
 	private Objective objective;
@@ -18,7 +18,7 @@ public class ArenaScorelist
 	private String displayName = "default";
 	private HashMap<ArenaPlayer, Integer> playerScores = new HashMap<ArenaPlayer, Integer>(); // TODO: Make it so this isn't a memory leak.
 	
-	public ArenaScorelist(ArenaScoreboard board, String name){
+	public ArenaScoreList(ArenaScoreboard board, String name){
 		this.name = name;
 		this.displayName = name;
 		this.board = board;

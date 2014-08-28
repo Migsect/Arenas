@@ -13,19 +13,19 @@ public class ArenaScoreboard
 {
 	private GameHandler handler;
 	private Scoreboard board;
-	private HashMap<String, ArenaScorelist> scores;
+	private HashMap<String, ArenaScoreList> scores;
 	private List<ArenaPlayer> hiddenPlayers = new ArrayList<ArenaPlayer>(); // TODO: Make it so this isn't a memory leak.
 	
 	public ArenaScoreboard(GameHandler handler)
 	{
 		this.handler = handler;
 		board = Bukkit.getScoreboardManager().getNewScoreboard();
-		scores = new HashMap<String, ArenaScorelist>();
+		scores = new HashMap<String, ArenaScoreList>();
 	}
 	
 	public void newScoreList(String name, boolean include)
 	{
-		ArenaScorelist scorelist = new ArenaScorelist(this,name);
+		ArenaScoreList scorelist = new ArenaScoreList(this,name);
 		if(include = true)
 		{
 			List<ArenaPlayer> players = handler.getActivePlayers();
