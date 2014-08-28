@@ -187,12 +187,16 @@ public class GameGolemnaut extends ArenaGame
 	{
 	}
 
+	
+	// This will occur when the player physically respawns after they die.
+	//   
 	@Override
 	public void onEventPlayerRespawn(PlayerRespawnEvent event)
 	{
 		ArenaPlayer player = plugin.gameHandler.getPlayer(event.getPlayer());
 		event.setRespawnLocation(player.getLastDeathLocation());
 		gameHandler.setStateGhost(player);
+		
 		
 		RespawnUpdateTask task = new RespawnUpdateTask(player);
     task.runTask(plugin);
