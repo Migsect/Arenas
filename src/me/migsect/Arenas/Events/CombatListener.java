@@ -152,6 +152,7 @@ public class CombatListener implements Listener
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onEntityDamagedByEntity(EntityDamageByEntityEvent event)
 	{

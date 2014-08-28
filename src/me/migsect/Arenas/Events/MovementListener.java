@@ -20,6 +20,7 @@ public class MovementListener implements Listener
 		this.plugin = plugin;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerMovement(PlayerMoveEvent event)
 	{
