@@ -59,13 +59,12 @@ public class CombatListener implements Listener
 	{
 		Entity entity = event.getEntity();
 		if(entity instanceof Player) return; // We don't need a redundacy.
-		if(!plugin.gameHandler.isGameLoaded()) return;
 		// if(event.isCanceled) return  - - - Cannot be canceled.
-		plugin.gameHandler.getLoadedGame().onEventEntityDeath(event);
+		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onEventEntityDeath(event);
 		// if(event.isCanceled) return  - - - Cannot be canceled.
 		
 		// Start of onListen
-		plugin.gameHandler.getLoadedGame().onListenEntityDeath(entity);
+		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenEntityDeath(entity);
 		if(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
 		{
 			EntityDamageByEntityEvent cause = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
@@ -73,12 +72,12 @@ public class CombatListener implements Listener
 			
 			if(killer instanceof Player)
 			{
-				plugin.gameHandler.getLoadedGame().onListenPlayerKillEntity(plugin.gameHandler.getPlayer((Player) killer),entity);
+				if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerKillEntity(plugin.gameHandler.getPlayer((Player) killer),entity);
 				plugin.gameHandler.getPlayer((Player) killer).getTeam().onListenPlayerKillEntity(plugin.gameHandler.getPlayer((Player) killer), entity);
 			}
 			else // Killer is not a player.
 			{
-				plugin.gameHandler.getLoadedGame().onListenEntityKillEntity(killer, entity);
+				if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenEntityKillEntity(killer, entity);
 				
 			}
 		}
@@ -88,16 +87,17 @@ public class CombatListener implements Listener
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event)
 	{
-		if(!plugin.gameHandler.isGameLoaded()) return;
-		if(plugin.gameHandler.isGameLoaded()) event.getEntity().sendMessage("The game IS loaded");
 		// if(event.isCanceled) return  - - - Cannot be canceled.
-		plugin.gameHandler.getLoadedGame().onEventPlayerDeath(event);
+		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onEventPlayerDeath(event);
 		// if(event.isCanceled) return  - - - Cannot be canceled.
 		
 		// Start of onListen:
 		ArenaPlayer player = plugin.gameHandler.getPlayer(event.getEntity());
 		plugin.gameHandler.getLoadedGame().onListenPlayerDeath(player);
 		if(player.hasTeam())player.getTeam().onListenPlayerDeath(player);
+		
+		// We need to clear the items that are being dropped if the player cannot drop it.
+		if(!player.canDeathDrop()) event.getDrops().clear();
 
 		player.setLastDeathLocation(player.getPlayer().getLocation());
 		if(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
@@ -119,16 +119,15 @@ public class CombatListener implements Listener
   	else // The death is caused by nature.
   	{
   		DamageCause cause = event.getEntity().getLastDamageCause().getCause();
-  		plugin.gameHandler.getLoadedGame().onListenEnviromentKillPlayer(player, cause);
+  		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenEnviromentKillPlayer(player, cause);
   		if(player.hasTeam()) player.getTeam().onListenEnviromentKillPlayer(player, cause);
   	}
 	}
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event)
 	{
-		if(!plugin.gameHandler.isGameLoaded()) return;
 		if(event.isCancelled()) return;
-		plugin.gameHandler.getLoadedGame().onEventEntityDamage(event);
+		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onEventEntityDamage(event);
 		if(event.isCancelled()) return;
 		
 		Entity entity = event.getEntity();
@@ -137,16 +136,16 @@ public class CombatListener implements Listener
 			ArenaPlayer player =plugin.gameHandler.getPlayer((Player) event.getEntity());
 			if(!player.canBeDamaged())
 			{
-				event.isCancelled();
+				event.setCancelled(true);
 				return;
 			}
-			plugin.gameHandler.getLoadedGame().onListenPlayerDamaged(player, event.getCause());
+			if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerDamaged(player, event.getCause());
 			if(player.hasTeam()) player.getTeam().onListenPlayerDamaged(player, event.getCause());
 			return;
 		}
 		else
 		{
-			plugin.gameHandler.getLoadedGame().onListenEntityDamaged(entity, event.getCause());
+			if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenEntityDamaged(entity, event.getCause());
 			return;
 		}
 		
@@ -156,9 +155,8 @@ public class CombatListener implements Listener
 	@EventHandler
 	public void onEntityDamagedByEntity(EntityDamageByEntityEvent event)
 	{
-		if(!plugin.gameHandler.isGameLoaded()) return;
 		if(event.isCancelled()) return;
-		plugin.gameHandler.getLoadedGame().onEventEntityDamagedByEntity(event);
+		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onEventEntityDamagedByEntity(event);
 		if(event.isCancelled()) return;
 		
 		if(event.getEntity() instanceof Player)
@@ -167,7 +165,7 @@ public class CombatListener implements Listener
 			Entity attacker = event.getDamager();
 			if(!player.canBeDamaged()) 
 			{
-				event.isCancelled();
+				event.setCancelled(true);
 				return;
 			}
 			if(attacker instanceof Player)
@@ -175,10 +173,10 @@ public class CombatListener implements Listener
 				ArenaPlayer attackerPlayer = plugin.gameHandler.getPlayer((Player) attacker);
 				if(!attackerPlayer.canDamage())
 				{
-					event.isCancelled();
+					event.setCancelled(true);
 					return;
 				}
-				plugin.gameHandler.getLoadedGame().onListenPlayerAttackPlayer(attackerPlayer, player);
+				if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerAttackPlayer(attackerPlayer, player);
 				if(player.hasTeam()) player.getTeam().onListenPlayerAttackPlayer(attackerPlayer, player);
 				if(attackerPlayer.hasTeam()) attackerPlayer.getTeam().onListenPlayerAttackPlayer(attackerPlayer, player);
 			}
@@ -206,7 +204,7 @@ public class CombatListener implements Listener
 					newArrow.setVelocity(velocity);
 					newArrow.setBounce(false);
 					
-					event.isCancelled();
+					event.setCancelled(true);
 					projectile.remove();
 					return;
 				}
@@ -217,21 +215,21 @@ public class CombatListener implements Listener
 					ArenaPlayer attackerPlayer = plugin.gameHandler.getPlayer((Player) projectile.getShooter());
 					if(!attackerPlayer.canDamage())
 					{
-						event.isCancelled();
+						event.setCancelled(true);
 						return;
 					}
-					plugin.gameHandler.getLoadedGame().onListenPlayerArrowHit(attackerPlayer, projectile);
+					if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerArrowHit(attackerPlayer, projectile);
 					if(attackerPlayer.hasTeam()) attackerPlayer.getTeam().onListenPlayerArrowHit(attackerPlayer, projectile);
 				}
 				else if(projectile.getShooter() instanceof Entity)
 				{
 					Entity entity = (Entity) projectile.getShooter();
-					plugin.gameHandler.getLoadedGame().onListenEntityArrowHit(entity, projectile);
+					if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenEntityArrowHit(entity, projectile);
 				}
 			}
 			else // attacker instanceof just Entity
 			{
-				plugin.gameHandler.getLoadedGame().onListenEntityAttackPlayer(attacker, player);
+				if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenEntityAttackPlayer(attacker, player);
 				if(player.hasTeam()) player.getTeam().onListenEntityAttackPlayer(attacker, player);
 			}
 				
@@ -246,7 +244,7 @@ public class CombatListener implements Listener
 				ArenaPlayer attackerPlayer = plugin.gameHandler.getPlayer((Player) attacker);
 				if(!attackerPlayer.canDamage())
 				{
-					event.isCancelled();
+					event.setCancelled(true);
 					return;
 				}
 				plugin.gameHandler.getLoadedGame().onListenPlayerAttackEntity(attackerPlayer, entity);
@@ -273,7 +271,7 @@ public class CombatListener implements Listener
 			ArenaPlayer player = plugin.gameHandler.getPlayer((Player) shooter);
 			if(!player.canDamage())
 			{
-				event.isCancelled();
+				event.setCancelled(true);
 				return;
 			}
 			if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerShootBow(player, event.getProjectile());

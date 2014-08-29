@@ -16,10 +16,15 @@ public class StateSpectator extends ArenaPlayerState
 		canAttack = false;
 		canPickup = false;
 		canDrop = false;
+		canDeathDrop = false;
 		canConsume = false;
 		canCollide = false;
 		canEffectSpawn = false;
 		canBeDamaged = false;
+		
+		tag = "spec";
+		name = "Specator";
+		mode = GameMode.ADVENTURE;		
 		
 		PotionEffect effect1 = new PotionEffect(PotionEffectType.REGENERATION, 3600, 4, false);
 		PotionEffect effect2 = new PotionEffect(PotionEffectType.SATURATION, 3600, 4, false);

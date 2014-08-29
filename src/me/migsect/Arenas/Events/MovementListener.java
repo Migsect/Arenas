@@ -68,7 +68,7 @@ public class MovementListener implements Listener
 		ArenaPlayer player = plugin.gameHandler.getPlayer(event.getPlayer());
 		if(!player.canSneak() && !player.getPlayer().isSneaking())
 		{
-			event.isCancelled();
+			event.setCancelled(true);
 			return;
 		}
 		if(player.getPlayer().isSneaking())
@@ -110,7 +110,7 @@ public class MovementListener implements Listener
 		ArenaPlayer player = plugin.gameHandler.getPlayer(event.getPlayer());
 		if(!player.canFly() && !player.getPlayer().isFlying())
 		{
-			event.isCancelled();
+			event.setCancelled(true);
 			return;
 		}
 		if(player.getPlayer().isFlying())

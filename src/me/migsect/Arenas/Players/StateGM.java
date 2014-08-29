@@ -20,6 +20,7 @@ public class StateGM extends ArenaPlayerState
 		
 		canOperate = true;
 		canKeepItems = true;
+		canDeathDrop = true;
 		
 	}
 	@Override

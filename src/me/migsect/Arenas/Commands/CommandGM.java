@@ -32,11 +32,11 @@ public class CommandGM extends ArenaCommand
 		if(plugin.gameHandler.isGameLoaded()) return true;
 		if(player.getState().getTag().equalsIgnoreCase("gamm"))
 		{
-			plugin.gameHandler.setStateLobby(player);
+			player.setState(plugin.gameHandler.getStateHandler().getUniversal("lobb"));
 		}
 		else
 		{
-			plugin.gameHandler.setStateGM(player);
+			player.setState(plugin.gameHandler.getStateHandler().getUniversal("gamm"));
 		}
 		return true;
 	}

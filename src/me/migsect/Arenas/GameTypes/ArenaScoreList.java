@@ -72,8 +72,8 @@ public class ArenaScoreList
 		List<ArenaPlayer> players = new ArrayList<ArenaPlayer>(playerScores.keySet());
 		for(int i = 0; i < players.size(); i++)
 		{
-			objective.getScore((OfflinePlayer) players.get(i)).setScore(playerScores.get(players.get(i)));
-			if(!board.isViewable(players.get(i))) board.getVanillaScoreboard().resetScores((OfflinePlayer) players.get(i));
+			objective.getScore((OfflinePlayer) players.get(i).getPlayer()).setScore(playerScores.get(players.get(i)));
+			if(!board.isViewable(players.get(i))) board.getVanillaScoreboard().resetScores((OfflinePlayer) players.get(i).getPlayer());
 		}
 	}
 }

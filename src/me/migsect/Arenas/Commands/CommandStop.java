@@ -36,7 +36,7 @@ public class CommandStop extends ArenaCommand
 			sender.sendMessage(ChatColor.RED + "No game is currently running.");
 			return true;
 		}
-		plugin.gameHandler.getLoadedGame().gameEnd();
+		plugin.gameHandler.endGame();
 		plugin.gameHandler.messageAllPlayers(ChatColor.YELLOW + "The currently running game has been stopped.");
 		return true;
 	

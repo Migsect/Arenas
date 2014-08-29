@@ -3,6 +3,7 @@ package me.migsect.Arenas.GameTypes.Golemnaut;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -211,7 +213,9 @@ public class TeamGolem extends ArenaTeam
 	{
 		loadout = new ArenaPlayerLoadout("Golem", "gole", Material.IRON_BLOCK);
 		
-		ItemStack helm = new ItemStack(Material.IRON_HELMET);
+		ItemStack helm = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
+		SkullMeta meta = (SkullMeta) helm.getItemMeta();
+		meta.setOwner("MHF_Golem");
 		ItemStack chest = new ItemStack(Material.IRON_CHESTPLATE);
 		ItemStack legs = new ItemStack(Material.IRON_LEGGINGS);
 		ItemStack boots = new ItemStack(Material.IRON_BOOTS);
@@ -221,11 +225,11 @@ public class TeamGolem extends ArenaTeam
 		loadout.setBoots(boots);
 		
 		ItemStack sword = new ItemStack(Material.IRON_SWORD);
-		sword.addEnchantment(Enchantment.DAMAGE_ALL,1);
+		sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 4);
 		sword.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
 		ItemStack bow = new ItemStack(Material.BOW);
 		bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
-		bow.addEnchantment(Enchantment.ARROW_KNOCKBACK, 2);
+		bow.addUnsafeEnchantment(Enchantment.ARROW_KNOCKBACK, 4);
 		ItemStack arrow = new ItemStack(Material.ARROW);
 		
 		loadout.addItem(sword);

@@ -3,6 +3,7 @@ package me.migsect.Arenas.GameTypes.Golemnaut;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -27,12 +29,14 @@ public class TeamVillagers extends ArenaTeam
 		super(plugin, game, tag);
 		teamLimit = 20;
 		
-		PotionEffect effect1 = new PotionEffect(PotionEffectType.SPEED, 3600, 0, false);
-		PotionEffect effect2 = new PotionEffect(PotionEffectType.JUMP, 3600, 2, false);
-		PotionEffect effect3 = new PotionEffect(PotionEffectType.SATURATION, 3600, 0, false);
+		PotionEffect effect1 = new PotionEffect(PotionEffectType.SPEED, 72000, 0, false);
+		PotionEffect effect2 = new PotionEffect(PotionEffectType.JUMP, 72000, 0, false);
+		PotionEffect effect3 = new PotionEffect(PotionEffectType.SATURATION, 72000, 0, false);
+		PotionEffect effect4 = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 4, true);
 		effects.add(effect1);
 		effects.add(effect2);
 		effects.add(effect3);
+		effects.add(effect4);
 		
 		team.setPrefix("" + ChatColor.GREEN);
 		team.setCanSeeFriendlyInvisibles(true);
@@ -199,7 +203,9 @@ public class TeamVillagers extends ArenaTeam
 	{
 		loadout = new ArenaPlayerLoadout("Golem", "gole", Material.IRON_BLOCK);
 		
-		ItemStack helm = new ItemStack(Material.IRON_HELMET);
+		ItemStack helm = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
+		SkullMeta meta = (SkullMeta) helm.getItemMeta();
+		meta.setOwner("MHF_Villager");
 		ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
 		ItemStack legs = new ItemStack(Material.LEATHER_LEGGINGS);
 		ItemStack boots = new ItemStack(Material.IRON_BOOTS);
@@ -208,15 +214,18 @@ public class TeamVillagers extends ArenaTeam
 		loadout.setLegs(legs);
 		loadout.setBoots(boots);
 		
-		ItemStack sword = new ItemStack(Material.IRON_SWORD);
+		ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
 		sword.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
 		ItemStack bow = new ItemStack(Material.BOW);
 		bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
+		bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
 		ItemStack arrow = new ItemStack(Material.ARROW);
+		ItemStack compass = new ItemStack(Material.COMPASS);
 		
 		loadout.addItem(sword);
 		loadout.addItem(bow);
 		loadout.addItem(arrow);
+		loadout.addItem(compass);
 
 	}
 }

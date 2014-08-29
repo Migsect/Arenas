@@ -15,6 +15,7 @@ public class StateGhost extends ArenaPlayerState
 		canAttack = false;
 		canPickup = false;
 		canDrop = false;
+		canDeathDrop = false;
 		canConsume = false;
 		canCollide = false;
 		canEffectSpawn = false;
@@ -29,7 +30,9 @@ public class StateGhost extends ArenaPlayerState
 		effects.add(effect3);
 		effects.add(effect4);
 		
-		mode = GameMode.SURVIVAL;
+		tag = "ghos";
+		name = "Ghost";
+		mode = GameMode.ADVENTURE;
 	}
 	@Override
 	public void enterState(ArenaPlayer player)

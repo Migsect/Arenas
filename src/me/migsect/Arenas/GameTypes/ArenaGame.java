@@ -99,6 +99,7 @@ public abstract class ArenaGame
 	final public int getGameMaxPlayers(){return maxPlayers;}
 	final public int getGameMinPlayers(){return minPlayers;}
 	final public List<ArenaTeam> getTeams(){return teams;}
+	final public GameHandler getHandler(){return gameHandler;}
 	
 	// item allowances get
 	final public boolean canKeepItems(){return canKeepItems;}

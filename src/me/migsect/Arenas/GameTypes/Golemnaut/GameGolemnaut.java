@@ -30,10 +30,12 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.DisplaySlot;
 
 import me.migsect.Arenas.ArenaHelper;
 import me.migsect.Arenas.Arenas;
 import me.migsect.Arenas.GameTypes.ArenaGame;
+import me.migsect.Arenas.GameTypes.ArenaScoreboard;
 import me.migsect.Arenas.Players.ArenaPlayer;
 import me.migsect.Arenas.Tasks.CountdownTask;
 import me.migsect.Arenas.Tasks.RespawnUpdateTask;
@@ -42,6 +44,8 @@ public class GameGolemnaut extends ArenaGame
 {
 	TeamGolem golemnaut;
 	TeamVillagers villagers;
+	
+	ArenaScoreboard scoreboard = new ArenaScoreboard(gameHandler);
 	
 	public GameGolemnaut(Arenas plugin)
 	{
@@ -107,6 +111,40 @@ public class GameGolemnaut extends ArenaGame
 			this.respawnPlayer(this.gameHandler.getActivePlayers().get(i));
 		}
 		randomGolem();
+		
+		// Setup Scores
+		scoreboard.newScoreList("score", true);
+		scoreboard.getScoreList("score").setDisplayName("Score");
+		scoreboard.getScoreList("score").setDisplaySlot(DisplaySlot.SIDEBAR);
+		scoreboard.showPlayers(gameHandler.getActivePlayers());
+		
+		// Timed game
+		CountdownTask countdownTask = new CountdownTask(300, "gameend");
+		countdownTask.setRecievers(gameHandler.getPlayers());
+		countdownTask.addMessage(300, ArenaHelper.colorEncoding("&e<<< <<< 5 Minutes Remain >>> >>>"));
+		countdownTask.addMessage(240, ArenaHelper.colorEncoding("&e<<< <<< 4 Minutes Remain >>> >>>"));
+		countdownTask.addMessage(180, ArenaHelper.colorEncoding("&e<<< <<< 3 Minutes Remain >>> >>>"));
+		countdownTask.addMessage(120, ArenaHelper.colorEncoding("&e<<< <<< 2 Minutes Remain >>> >>>"));
+		countdownTask.addMessage(60, ArenaHelper.colorEncoding("&e<<< <<< 1 Minute Remains >>> >>>"));
+
+		countdownTask.addMessage(45, ArenaHelper.colorEncoding("&e<<< <<< 45 Seconds Remain >>> >>>"));
+		countdownTask.addMessage(30, ArenaHelper.colorEncoding("&e<<< <<< 30 Seconds Remain >>> >>>"));
+		countdownTask.addMessage(15, ArenaHelper.colorEncoding("&e<<< <<< 15 Seconds Remain >>> >>>"));
+		countdownTask.addMessage(10, ArenaHelper.colorEncoding("&e10"));
+		countdownTask.addMessage(9, ArenaHelper.colorEncoding("&e9"));
+		countdownTask.addMessage(8, ArenaHelper.colorEncoding("&e8"));
+		countdownTask.addMessage(7, ArenaHelper.colorEncoding("&e7"));
+		countdownTask.addMessage(6, ArenaHelper.colorEncoding("&e6"));
+		countdownTask.addMessage(5, ArenaHelper.colorEncoding("&e5"));
+		countdownTask.addMessage(4, ArenaHelper.colorEncoding("&e4"));
+		countdownTask.addMessage(3, ArenaHelper.colorEncoding("&e3"));
+		countdownTask.addMessage(2, ArenaHelper.colorEncoding("&e2"));
+		countdownTask.addMessage(1, ArenaHelper.colorEncoding("&e1"));
+
+		taskhandler.startCountdown(countdownTask);
+		taskhandler.startTagTask(this, "endgame", 3000);
+		
+		
 	}
 
 	@Override
@@ -140,7 +178,7 @@ public class GameGolemnaut extends ArenaGame
 	@Override
 	public void respawnPlayer(ArenaPlayer player)
 	{
-		gameHandler.setStatePlaying(player);
+		player.setState(gameHandler.getStateHandler().getUniversal("play"));
 		player.getPlayer().teleport(spawnHandler.smartSpawn(100));
 		if(player.hasLoadout()) player.getLoadout().equipPlayer(player);
 		if(player.hasTeam()) player.getTeam().grantEffects(player);
@@ -149,11 +187,31 @@ public class GameGolemnaut extends ArenaGame
 	@Override
 	public void onTick(int gameTick)
 	{
+		// this will point all the villager's compasses towards the golemnaut.
+		if(gameTick % 20 == 0)
+		{
+			plugin.logger.info("This actually did something!");
+			for(int i = 0; i < villagers.getPlayers().size(); i++)
+			{
+				villagers.getPlayers().get(i).getPlayer().setCompassTarget(golemnaut.getPlayers().get(0).getPlayer().getLocation());
+			}
+		}
+		if(gameTick % 100 == 0)
+		{
+			for(int i = 0; i <  golemnaut.getPlayers().size(); i++)
+			{
+				scoreboard.getScoreList("score").addScore(golemnaut.getPlayers().get(i), 1);
+			}
+		}
 	}
 
 	@Override
 	public void onTagTask(String tag)
 	{
+		if(tag.equals("endgame"))
+		{
+			gameHandler.endGame();
+		}
 	}
 
 	@Override
@@ -195,19 +253,17 @@ public class GameGolemnaut extends ArenaGame
 	{
 		ArenaPlayer player = plugin.gameHandler.getPlayer(event.getPlayer());
 		event.setRespawnLocation(player.getLastDeathLocation());
-		gameHandler.setStateGhost(player);
+		player.setState(gameHandler.getStateHandler().getUniversal("ghos"));
 		
 		
 		RespawnUpdateTask task = new RespawnUpdateTask(player);
-    task.runTask(plugin);
+		task.runTask(plugin);
 		
-		taskhandler.startRespawn(this, player, 200);
+		taskhandler.startRespawn(this, player, 100);
 		
-		CountdownTask countdown = new CountdownTask(10, "respawn");
+		CountdownTask countdown = new CountdownTask(5, "respawn");
 		countdown.addReciever(player);
-		countdown.addMessage(10, ArenaHelper.colorEncoding("&eYou will respawn in 10 seconds."));
-		countdown.addMessage(5, ArenaHelper.colorEncoding("&e5"));
-		countdown.addMessage(4, ArenaHelper.colorEncoding("&e4"));
+		countdown.addMessage(5, ArenaHelper.colorEncoding("&eYou will respawn in 5 seconds."));
 		countdown.addMessage(3, ArenaHelper.colorEncoding("&e3"));
 		countdown.addMessage(2, ArenaHelper.colorEncoding("&e2"));
 		countdown.addMessage(1, ArenaHelper.colorEncoding("&e1"));
@@ -292,9 +348,16 @@ public class GameGolemnaut extends ArenaGame
 	@Override
 	public void onListenPlayerKillPlayer(ArenaPlayer player, ArenaPlayer killed)
 	{
-		if(killed.getTeam() == golemnaut)
+		if(killed.getTeam().equals(golemnaut))
 		{
+			scoreboard.getScoreList("score").addScore(player, 20);
 			switchGolem(player);
+			return;
+		}
+		if(player.getTeam().equals(golemnaut))
+		{
+			scoreboard.getScoreList("score").addScore(player, 5);
+			return;
 		}
 	}
 

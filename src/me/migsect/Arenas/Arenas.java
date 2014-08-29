@@ -9,6 +9,7 @@ import me.migsect.Arenas.Commands.CommandInfo;
 import me.migsect.Arenas.Commands.CommandList;
 import me.migsect.Arenas.Commands.CommandLoadGame;
 import me.migsect.Arenas.Commands.CommandLoadMap;
+import me.migsect.Arenas.Commands.CommandShowState;
 import me.migsect.Arenas.Commands.CommandStart;
 import me.migsect.Arenas.Commands.CommandStop;
 import me.migsect.Arenas.Commands.CommandUnloadGame;
@@ -99,6 +100,7 @@ public class Arenas extends JavaPlugin
 		commandHandler.register(new CommandGM(this));
 		commandHandler.register(new CommandStart(this));
 		commandHandler.register(new CommandStop(this));
+		commandHandler.register(new CommandShowState(this));
 	}
 
 

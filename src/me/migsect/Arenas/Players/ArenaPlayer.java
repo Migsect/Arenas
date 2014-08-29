@@ -21,8 +21,6 @@ public class ArenaPlayer
 	ArenaTeam team = null;
 	ArenaPlayerState state;
 	ArenaPlayerLoadout loadout;
-	int kills;
-	int deaths;
 	
 	HashMap<String, ArenaPlayerScore> scores = new HashMap<String, ArenaPlayerScore>();
 	
@@ -56,7 +54,6 @@ public class ArenaPlayer
 		this.handler = handler;
 		this.player = player;
 		lastDeath = player.getLocation();
-		resetStats();
 	}
 	
 	public Player getPlayer()
@@ -98,25 +95,6 @@ public class ArenaPlayer
 		return false;
 	}
 	public Location getLastDeathLocation(){return lastDeath;}
-	
-	public int getKills(){return kills;}
-	public int getDeaths(){return deaths;}
-	public void setKills(int num){kills = num;}
-	public void setDeaths(int num){deaths = num;}
-	public void resetStats()
-	{
-		kills = 0;
-		deaths = 0;
-	}
-	
-	public void addKill()
-	{
-		kills++;
-	}
-	public void addDeath()
-	{
-		deaths++;
-	}
 	
 	public void playerDeath()
 	{

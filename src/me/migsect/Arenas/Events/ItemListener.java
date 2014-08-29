@@ -30,7 +30,7 @@ public class ItemListener implements Listener
 		
 		ArenaPlayer player = plugin.gameHandler.getPlayer(event.getPlayer());
 		if(!player.canPickup()){
-			event.isCancelled();
+			event.setCancelled(true);
 			return;
 		}
 		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerPickup(player, event.getItem());
@@ -48,7 +48,7 @@ public class ItemListener implements Listener
 		ArenaPlayer player = plugin.gameHandler.getPlayer(event.getPlayer());
 		if(!player.canDrop())
 		{
-			event.isCancelled();
+			event.setCancelled(true);
 			return;
 		}
 		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerDrop(player, event.getItemDrop());
@@ -66,7 +66,7 @@ public class ItemListener implements Listener
 		ArenaPlayer player = plugin.gameHandler.getPlayer(event.getPlayer());
 		if(!player.canConsume())
 		{
-			event.isCancelled();
+			event.setCancelled(true);
 			return;
 		}
 		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerConsume(player, event.getItem());

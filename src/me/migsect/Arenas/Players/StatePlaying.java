@@ -1,5 +1,7 @@
 package me.migsect.Arenas.Players;
 
+import org.bukkit.GameMode;
+
 import me.migsect.Arenas.GameTypes.GameHandler;
 
 public class StatePlaying extends ArenaPlayerState
@@ -16,6 +18,10 @@ public class StatePlaying extends ArenaPlayerState
 		canDeathDrop = false;
 		canBreak = false;
 		canPlace = false;
+		
+		tag = "play";
+		name = "Playing";
+		mode = GameMode.SURVIVAL;
 	}
 
 	@Override

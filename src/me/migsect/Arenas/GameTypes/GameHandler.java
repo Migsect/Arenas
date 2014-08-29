@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
 import me.migsect.Arenas.Arenas;
@@ -15,6 +16,7 @@ import me.migsect.Arenas.Players.StateGhost;
 import me.migsect.Arenas.Players.StateHandler;
 import me.migsect.Arenas.Players.StateLobby;
 import me.migsect.Arenas.Players.StatePlaying;
+import me.migsect.Arenas.Players.StateSpectator;
 import me.migsect.Arenas.Tasks.TaskHandler;
 import me.migsect.Arenas.maps.MapHandler;
 import me.migsect.Arenas.maps.SpawnHandler;
@@ -119,9 +121,10 @@ public class GameHandler
 	public void registerStates()
 	{
 		stateHandler.registerUniversal(new StateGM(this));
-		stateHandler.registerUniversal(new StateGM(this));
-		stateHandler.registerUniversal(new StateGM(this));
-		stateHandler.registerUniversal(new StateGM(this));
+		stateHandler.registerUniversal(new StateGhost(this));
+		stateHandler.registerUniversal(new StateLobby(this));
+		stateHandler.registerUniversal(new StatePlaying(this));
+		stateHandler.registerUniversal(new StateSpectator(this));
 	}
 	// registerPlayer() will add the player to the player list.  
 	public void registerPlayer(Player player)
@@ -133,7 +136,17 @@ public class GameHandler
 		{
 			loadedGame.addPlayer(gamePlayer);
 		}
-		gamePlayer.setState(stateLobby);
+		gamePlayer.setState(stateHandler.getUniversal("lobb"));
+		gamePlayer.getPlayer().getInventory().clear();
+		gamePlayer.getPlayer().getInventory().setHelmet(null);
+		gamePlayer.getPlayer().getInventory().setBoots(null);
+		gamePlayer.getPlayer().getInventory().setChestplate(null);
+		gamePlayer.getPlayer().getInventory().setLeggings(null);
+		
+		for(PotionEffect effect : player.getPlayer().getActivePotionEffects())
+		{
+			player.getPlayer().removePotionEffect(effect.getType());
+		}
 		updateHidden();
 	}
 	// Deregister player will remove the player and if a game is running will also remove the player.
@@ -173,17 +186,6 @@ public class GameHandler
 			this.deregisterPlayer(this.getPlayers().get(i));
 		}
 		plugin.logger.info("The world has been deregistered");
-	}
-	public void addSpectator(ArenaPlayer player)
-	{
-		spectators.add(player);
-		player.setState(stateGhost);
-	}
-	public void removeSpectator(ArenaPlayer player)
-	{
-		if(!spectators.contains(player)) return;
-			spectators.remove(player);
-		player.setState(stateLobby);
 	}
 	public boolean isSpectator(ArenaPlayer player)
 	{
@@ -234,34 +236,17 @@ public class GameHandler
 	public void startGame()
 	{
 		loadedGame.gameStart();
+		taskHandler.startGameClock(loadedGame);
 	}
 	public void endGame()
 	{
 		loadedGame.gameEnd();
+		taskHandler.stopGameClock();
 	}
 	public void resetGame()
 	{
 		loadedGame.gameReset();
 	}
-	
-	// stateSwitching
-	public void setStateLobby(ArenaPlayer player)
-	{
-		player.setState(stateLobby);
-	}
-	public void setStatePlaying(ArenaPlayer player)
-	{
-		player.setState(statePlaying);
-	}
-	public void setStateGM(ArenaPlayer player)
-	{
-		player.setState(stateGM);
-	}
-	public void setStateGhost(ArenaPlayer player)
-	{
-		player.setState(stateGhost);
-	}
-	
 	
 	// CONDITIONALS:  here is all the conditionals that can be taken from the game
 	//   by code standard all "Is" statements will be bool returns.  Furthermore anything

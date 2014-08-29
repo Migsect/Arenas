@@ -18,7 +18,7 @@ public class DelayedStartTask extends BukkitRunnable
 	@Override
 	public void run()
 	{
-		game.gameStart();
+		if(game.getHandler().isGameLoaded()) game.getHandler().startGame();;
 	}
 	
 

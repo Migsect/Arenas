@@ -15,12 +15,12 @@ public class TagTask extends BukkitRunnable
 	List<ArenaPlayer> players = new ArrayList<ArenaPlayer>();
 	ArenaGame game;
 	
-	TagTask(ArenaGame game, String tag)
+	public TagTask(ArenaGame game, String tag)
 	{
 		this.game = game;
 		this.tag = tag;
 	}
-	TagTask(ArenaGame game, String tag, List<ArenaPlayer> players)
+	public TagTask(ArenaGame game, String tag, List<ArenaPlayer> players)
 	{
 		this.game = game;
 		this.tag = tag;

@@ -34,20 +34,35 @@ public class ArenaScoreboard
 				scorelist.setScore(players.get(i), 0);
 			}
 		}
+		scores.put(name, scorelist);
 	}
 	
 	public Scoreboard getVanillaScoreboard()
 	{
 		return board;
 	}
-	
+	public void showPlayer(ArenaPlayer player)
+	{
+		player.getPlayer().setScoreboard(board);
+	}
+	public void showPlayers(List<ArenaPlayer> players)
+	{
+		for(int i = 0; i < players.size(); i++)
+		{
+			showPlayer(players.get(i));
+		}
+	}
 	public void deleteScoreList(String string)
 	{
 		scores.remove(string);
 	}
-	public int getScoreList(String score, ArenaPlayer player)
+	public int getScore(String score, ArenaPlayer player)
 	{
 		return scores.get(score).getScore(player);
+	}
+	public ArenaScoreList getScoreList(String score)
+	{
+		return scores.get(score);
 	}
 	public boolean isViewable(ArenaPlayer player)
 	{
