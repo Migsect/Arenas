@@ -12,7 +12,7 @@ public class StateGhost extends ArenaPlayerState
 	{
 		super(handler);
 		canBreak = false;
-		canAttack = false;
+		canDamage = false;
 		canPickup = false;
 		canDrop = false;
 		canDeathDrop = false;

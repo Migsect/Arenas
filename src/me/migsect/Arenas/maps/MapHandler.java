@@ -42,6 +42,7 @@ public class MapHandler
 		}
 	}
 	
+	public Location getMainLobby(){return generateLocation(Bukkit.getWorld(plugin.mapConfig.getConfig().getString("mainlobbyworld")), plugin.mapConfig.getConfig().getString("mainlobby"));}
 	public List<Map> getMaps(){return new ArrayList<Map>(maps.values());}
 	public boolean mapExists(String mapTag){return maps.containsKey(mapTag);}
 	public Map getMap(String mapTag){return maps.get(mapTag);}

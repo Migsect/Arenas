@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+
 import me.migsect.Arenas.Arenas;
 import me.migsect.Arenas.GameTypes.ArenaGame;
 import me.migsect.Arenas.Players.ArenaPlayer;
@@ -32,7 +34,7 @@ public class TaskHandler
 	public void stopGameClock()
 	{
 		if(clock == null) return;
-		clock.cancel();
+		Bukkit.getScheduler().cancelTask(clock.getTaskId());
 		clock = null;
 	}
 	public int getGameTick()
@@ -117,6 +119,14 @@ public class TaskHandler
 			tagTasks.get(i).cancel();
 			tagTasks.remove(i);
 		}
+	}
+	public boolean existsTagTask(String tag)
+	{
+		for(int i = 0; i < tagTasks.size(); i++)
+		{
+			if(tagTasks.get(i).isTag(tag)) return true;
+		}
+		return false;
 	}
 	// only to be used by the ArenaGame abstract class
 	public void delayedStart(ArenaGame game, int seconds)

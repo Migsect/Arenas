@@ -155,9 +155,6 @@ public abstract class ArenaGame
 	final public boolean isRunning(){return isRunning;}
 	final public ArenaGamePhase getGamePhase(){return phase;}
 	
-	abstract public void addPlayer(ArenaPlayer player);
-	abstract public void removePlayer(ArenaPlayer player);
-	
 	abstract public void respawnPlayer(ArenaPlayer player);
 	abstract public void onTick(int gameTick); // deals with the clock and having things change.
 	abstract public void onTagTask(String tag); // this is meant to be a means to perform a future task without
@@ -259,5 +256,9 @@ public abstract class ArenaGame
 	abstract public void onListenPlayerInteractEntity(ArenaPlayer player, Entity entity); //
 	abstract public void onListenPlayerBlockBreak(ArenaPlayer player, Block block); //
 	abstract public void onListenPlayerPlaceBlock(ArenaPlayer player, Block block); //
+
+	abstract public void onPlayerJoinGame(ArenaPlayer player);
+	abstract public void onPlayerLeaveGame(ArenaPlayer player);
+	
 	
 }

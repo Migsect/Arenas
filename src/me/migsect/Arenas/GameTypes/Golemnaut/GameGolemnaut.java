@@ -87,6 +87,16 @@ public class GameGolemnaut extends ArenaGame
 		Random rand = new Random();
 		switchGolem(players.get(rand.nextInt(players.size()-1)));
 	}
+	private void randomGolem(List<ArenaPlayer> doNotChoose)
+	{
+		List<ArenaPlayer> players = villagers.getPlayers();
+		for(int i = 0; i < players.size(); i++)
+		{
+			if(doNotChoose.contains(players.get(i))) players.remove(i);
+		}
+		Random rand = new Random();
+		switchGolem(players.get(rand.nextInt(players.size()-1)));
+	}
 
 	@Override
 	public void gameInitiate()
@@ -142,7 +152,7 @@ public class GameGolemnaut extends ArenaGame
 		countdownTask.addMessage(1, ArenaHelper.colorEncoding("&e1"));
 
 		taskhandler.startCountdown(countdownTask);
-		taskhandler.startTagTask(this, "endgame", 3000);
+		taskhandler.startTagTask(this, "endgame", 6000);
 		
 		
 	}
@@ -158,6 +168,16 @@ public class GameGolemnaut extends ArenaGame
 		this.isRunning = false;
 		villagers.removeAllPlayers();
 		golemnaut.removeAllPlayers();
+		for(int i = 0; i < gameHandler.getActivePlayers().size();i++)
+		{
+			gameHandler.getActivePlayers().get(i).setState(gameHandler.getStateHandler().getUniversal("lobb"));
+			ArenaHelper.emptyPlayer(gameHandler.getActivePlayers().get(i));
+		}
+		taskhandler.stopGameClock();
+		taskhandler.stopCountdownType("gameend");
+		taskhandler.cancelTagTasks("endgame");
+		
+		gameHandler.messageAllPlayers(ArenaHelper.colorEncoding("&e" + scoreboard.getScoreList("score").getTopPlayer().getPlayer().getDisplayName() + "&f wins with &e" + scoreboard.getScoreList("score").getTopScore() + " points&f!" ));
 	}
 
 	@Override
@@ -166,20 +186,29 @@ public class GameGolemnaut extends ArenaGame
 	}
 
 	@Override
-	public void addPlayer(ArenaPlayer player)
+	public void onPlayerJoinGame(ArenaPlayer player)
 	{
+		if(!this.isRunning()) return;
+		villagers.addPlayer(player);
+		villagers.setLoadout(player);
+		this.respawnPlayer(player);
+		this.scoreboard.showPlayer(player);
+		
 	}
 
 	@Override
-	public void removePlayer(ArenaPlayer player)
+	public void onPlayerLeaveGame(ArenaPlayer player)
 	{
+		List<ArenaPlayer> nonGolem = new ArrayList<ArenaPlayer>();
+		nonGolem.add(player);
+		if(golemnaut.containsPlayer(player)) randomGolem(nonGolem);
 	}
 
 	@Override
 	public void respawnPlayer(ArenaPlayer player)
 	{
 		player.setState(gameHandler.getStateHandler().getUniversal("play"));
-		player.getPlayer().teleport(spawnHandler.smartSpawn(100));
+		player.getPlayer().teleport(spawnHandler.smartSpawn(30));
 		if(player.hasLoadout()) player.getLoadout().equipPlayer(player);
 		if(player.hasTeam()) player.getTeam().grantEffects(player);
 	}
@@ -188,19 +217,25 @@ public class GameGolemnaut extends ArenaGame
 	public void onTick(int gameTick)
 	{
 		// this will point all the villager's compasses towards the golemnaut.
+		if(!this.isRunning()) return;
 		if(gameTick % 20 == 0)
 		{
-			plugin.logger.info("This actually did something!");
-			for(int i = 0; i < villagers.getPlayers().size(); i++)
+			if(villagers.getPlayers().size() >= 1)
 			{
-				villagers.getPlayers().get(i).getPlayer().setCompassTarget(golemnaut.getPlayers().get(0).getPlayer().getLocation());
+				for(int i = 0; i < villagers.getPlayers().size(); i++)
+				{
+					villagers.getPlayers().get(i).getPlayer().setCompassTarget(golemnaut.getPlayers().get(0).getPlayer().getLocation());
+				}
 			}
 		}
 		if(gameTick % 100 == 0)
 		{
-			for(int i = 0; i <  golemnaut.getPlayers().size(); i++)
+			if(golemnaut.getPlayers().size() >= 1)
 			{
-				scoreboard.getScoreList("score").addScore(golemnaut.getPlayers().get(i), 1);
+				for(int i = 0; i <  golemnaut.getPlayers().size(); i++)
+				{
+					scoreboard.getScoreList("score").addScore(golemnaut.getPlayers().get(i), 1);
+				}
 			}
 		}
 	}

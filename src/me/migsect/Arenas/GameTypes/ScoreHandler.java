@@ -1,5 +1,7 @@
 package me.migsect.Arenas.GameTypes;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -44,8 +46,18 @@ public class ScoreHandler
 	{
 		player.getPlayer().setScoreboard(mainboard);
 	}
-	public void hideMain(ArenaPlayer player)
+	public void showMain(List<ArenaPlayer> players)
+	{
+		for(int i = 0; i < players.size(); i++)
+		{
+		}
+	}
+	public void hideScoreboard(ArenaPlayer player)
 	{
 		player.getPlayer().setScoreboard(manager.getNewScoreboard());
+	}
+	public void hideScoreboard(List<ArenaPlayer> players)
+	{
+		
 	}
 }

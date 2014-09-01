@@ -78,12 +78,12 @@ public class GameEnderSpawn extends ArenaGame
 	}
 
 	@Override
-	public void addPlayer(ArenaPlayer player)
+	public void onPlayerJoinGame(ArenaPlayer player)
 	{
 	}
 
 	@Override
-	public void removePlayer(ArenaPlayer player)
+	public void onPlayerLeaveGame(ArenaPlayer player)
 	{
 	}
 

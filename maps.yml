@@ -1,20 +1,38 @@
 mainlobby: 0 33 0
+mainlobbyworld: MigDevLobby
 maps:
   library:
     tag: libr
     displayName: Library
     world: MigDevLobby
-    lobby: 1000 73 1000
-    center: 1000 73 1000
+    lobby: 30 62 1000
+    center: 30 62 1000
     center-maxDistance: 100
     mapBottom: 0
     gametypes:
     - gole
     - ends
     spawnpoints:
-    - 989 66 989
-    - 1011 66 1011
-    - 1003 66 997
+    - 30 62 1000
+    - 16 62 1008
+    - 10 63 1017
+    - 36 61 1020
+    - 45 61 1009
+    - 41 61 990
+    - 19 66 989
+    - 45 66 998
+    - 60 66 998
+    - 9 63 1002
+    - 30 66 989
+    - 42 66 998
+    - 37 61 1007
+    - 36 61 1006
+    - 36 61 995
+    - 25 61 995
+    - 25 61 1006
+    - 15 62 992
+    - 16 63 983
+    - 37 66 982
     teamspawnpoints:
       ends: []
   townsquare:

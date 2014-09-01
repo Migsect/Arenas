@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
+import me.migsect.Arenas.ArenaHelper;
 import me.migsect.Arenas.Arenas;
 import me.migsect.Arenas.Players.ArenaPlayer;
 import me.migsect.Arenas.Players.StateGM;
@@ -127,39 +127,34 @@ public class GameHandler
 		stateHandler.registerUniversal(new StateSpectator(this));
 	}
 	// registerPlayer() will add the player to the player list.  
-	public void registerPlayer(Player player)
+	public ArenaPlayer registerPlayer(Player player)
 	{
 		String name = player.getName();
 		ArenaPlayer gamePlayer = new ArenaPlayer(player, this);
 		gamePlayers.put(name, gamePlayer);
-		if (this.isGameLoaded())
-		{
-			loadedGame.addPlayer(gamePlayer);
-		}
 		gamePlayer.setState(stateHandler.getUniversal("lobb"));
-		gamePlayer.getPlayer().getInventory().clear();
-		gamePlayer.getPlayer().getInventory().setHelmet(null);
-		gamePlayer.getPlayer().getInventory().setBoots(null);
-		gamePlayer.getPlayer().getInventory().setChestplate(null);
-		gamePlayer.getPlayer().getInventory().setLeggings(null);
+		ArenaHelper.emptyPlayer(gamePlayer);
 		
-		for(PotionEffect effect : player.getPlayer().getActivePotionEffects())
-		{
-			player.getPlayer().removePotionEffect(effect.getType());
-		}
 		updateHidden();
+		
+		if(plugin.gameHandler.getMapHandler().isMapLoaded()) player.teleport(plugin.gameHandler.getMapHandler().getLoadedMap().getLobby());
+		else player.teleport(plugin.gameHandler.getMapHandler().getMainLobby());
+		
+		return gamePlayer;
 	}
 	// Deregister player will remove the player and if a game is running will also remove the player.
 	public void deregisterPlayer(ArenaPlayer player)
 	{
-		if (this.isGameLoaded())
-		{
-			loadedGame.removePlayer(player); // We do this so the game can clean out the player.
-		}
 		gamePlayers.remove(player);
 		player.getPlayer().sendMessage("You have been deregistered");
 		if(isHidden(player)) removeHidden(player);
+		ArenaHelper.emptyPlayer(player);
+		player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 		updateHidden();
+		
+		if(plugin.gameHandler.getMapHandler().isMapLoaded()) player.getPlayer().teleport(plugin.gameHandler.getMapHandler().getLoadedMap().getLobby());
+		else player.getPlayer().teleport(plugin.gameHandler.getMapHandler().getMainLobby());
+		
 	}
 	public void deregisterPlayer(Player player)
 	{
@@ -225,11 +220,20 @@ public class GameHandler
 	{
 		loadedGame = game;
 		loadedGame.gameInitiate();
+		for(int i = 0; i < this.getPlayers().size(); i++)
+		{
+			this.getPlayers().get(i).getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		}
+		
 	}
 	public void unloadGame()
 	{
 		loadedGame.gameTerminate();
 		loadedGame = null;
+		for(int i = 0; i < this.getPlayers().size(); i++)
+		{
+			this.getPlayers().get(i).getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		}
 	}
 	
 	// Game Commands, will start, stop, reset, etc games.

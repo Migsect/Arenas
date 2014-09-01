@@ -20,7 +20,7 @@ public class StateSpectator extends ArenaPlayerState
 		canConsume = false;
 		canCollide = false;
 		canEffectSpawn = false;
-		canBeDamaged = false;
+		canDamage = false;
 		
 		tag = "spec";
 		name = "Specator";

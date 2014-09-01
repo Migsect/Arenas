@@ -55,6 +55,34 @@ public class ArenaScoreList
 	{
 		return playerScores.get(player);
 	}
+	public ArenaPlayer getTopPlayer()
+	{
+		List<ArenaPlayer> players = new ArrayList<ArenaPlayer>(playerScores.keySet());
+		int topScore = 0;
+		ArenaPlayer topPlayer = null;
+		for(int i = 0; i < players.size(); i++)
+		{
+			if(playerScores.get(players.get(i)) > topScore)
+			{
+				topPlayer = players.get(i);
+				topScore = playerScores.get(players.get(i));
+			}
+		}
+		return topPlayer;
+	}
+	public int getTopScore()
+	{
+		List<ArenaPlayer> players = new ArrayList<ArenaPlayer>(playerScores.keySet());
+		int topScore = 0;
+		for(int i = 0; i < players.size(); i++)
+		{
+			if(playerScores.get(players.get(i)) > topScore)
+			{
+				topScore = playerScores.get(players.get(i));
+			}
+		}
+		return topScore;
+	}
 	public void setScore(ArenaPlayer player, int newScore)
 	{
 		playerScores.put(player, newScore);
