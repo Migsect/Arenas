@@ -14,8 +14,9 @@ public abstract class ArenaCommand
 	protected Arenas plugin;
 	
 	protected String tag = "default";
-	protected String info = "REPLACE ME";
+	protected String info = "REPLACE ME"; // max is 30
 	protected String perm = "arenas.default";
+	protected List<String> moreInfo = new ArrayList<String>(); //max is 43
 	protected List<SenderType> senderTypes;
 	
 	protected int minArgs = 0;
@@ -37,6 +38,7 @@ public abstract class ArenaCommand
 	
 	final public String getTag(){return tag;}
 	final public String getInfo(){return info;}
+	final public List<String> getMoreInfo(){return moreInfo;}
 	final public String getPerm(){return perm;}
 	final public List<SenderType> getSenderTypes(){return senderTypes;}
 	

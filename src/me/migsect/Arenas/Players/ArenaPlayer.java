@@ -47,6 +47,9 @@ public class ArenaPlayer
 	boolean canJump = true;
 	boolean canSneak = true;
 	
+	// Otherstuff
+	
+	boolean hidden = false;
 	Location lastDeath;
 	
 	public ArenaPlayer(Player player, GameHandler handler)

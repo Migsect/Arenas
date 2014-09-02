@@ -33,13 +33,11 @@ public class GameHandler
 	private ScoreHandler scoreHandler;
 	private StateHandler stateHandler;
 	
-	private Scoreboard board;
-	private HashMap<String,ArenaGame> gameTypes;
-	private HashMap<String,ArenaPlayer> gamePlayers;
-	private List<ArenaPlayer> spectators;
-	private ArenaGame loadedGame;
+	private HashMap<String,ArenaGame> gameTypes = new HashMap<String,ArenaGame>();;
+	private HashMap<String,ArenaPlayer> gamePlayers = new HashMap<String,ArenaPlayer>();;
+	private ArenaGame loadedGame = null;
 	
-	private List<ArenaPlayer> hiddenPlayers;
+	private Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
 	
 	
 	
@@ -47,19 +45,12 @@ public class GameHandler
 	public GameHandler(Arenas instance)
 	{
 		plugin = instance;
-		gameTypes = new HashMap<String,ArenaGame>();
-		gamePlayers = new HashMap<String,ArenaPlayer>();
-		spectators = new ArrayList<ArenaPlayer>();
-		board = Bukkit.getScoreboardManager().getNewScoreboard();
+		
+		mapHandler= new MapHandler(plugin, this);
 		taskHandler = new TaskHandler(plugin);
 		spawnHandler = new SpawnHandler(this);
 		scoreHandler = new ScoreHandler(this);
-		mapHandler = new MapHandler(plugin, this);
 		stateHandler = new StateHandler(this);
-		
-		hiddenPlayers = new ArrayList<ArenaPlayer>();
-		
-		loadedGame = null;
 		
 		registerStates();
 	}
@@ -73,50 +64,8 @@ public class GameHandler
 	//   And unhiding of players.
 	//   Because we have a player list, we can easily update whenever a new player
 	//   is registered.
-	public void addHidden(ArenaPlayer player)
-	{
-		hiddenPlayers.add(player);
-		// updateHidden();
-	}
-	public void removeHidden(ArenaPlayer player)
-	{
-		hiddenPlayers.remove(player);
-	}
-	public void removeHiddenAll()
-	{
-		hiddenPlayers.clear();
-		// updateHidden();
-	}
 	public void updateHidden()
 	{
-		if(hiddenPlayers.isEmpty() || gamePlayers.size() <= 1) return;
-		// For each player:
-		for(int i = 0; i < gamePlayers.size(); i++)
-		{
-			// Check to see if the
-			for(int j = 0; j < hiddenPlayers.size(); j++)
-			{
-				if(!gamePlayers.get(i).equals(hiddenPlayers.get(j))
-						&& gamePlayers.get(i).getPlayer().canSee(hiddenPlayers.get(j).getPlayer()) 
-						&& !hiddenPlayers.contains(gamePlayers.get(i)))
-				{
-					gamePlayers.get(i).getPlayer().hidePlayer(hiddenPlayers.get(j).getPlayer());
-				}
-			}
-			for(int j = 0; j < gamePlayers.size(); j++)
-			{
-				if(!gamePlayers.get(i).equals(hiddenPlayers.get(j))
-						&&!gamePlayers.get(i).getPlayer().canSee(gamePlayers.get(j).getPlayer()) 
-						&& !hiddenPlayers.contains(gamePlayers.get(j)))
-				{
-					gamePlayers.get(i).getPlayer().showPlayer(gamePlayers.get(j).getPlayer());
-				}
-			}
-		}
-	}
-	public boolean isHidden(ArenaPlayer player)
-	{
-		return hiddenPlayers.contains(player);
 	}
 	public void registerStates()
 	{
@@ -147,7 +96,6 @@ public class GameHandler
 	{
 		gamePlayers.remove(player);
 		player.getPlayer().sendMessage("You have been deregistered");
-		if(isHidden(player)) removeHidden(player);
 		ArenaHelper.emptyPlayer(player);
 		player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 		updateHidden();
@@ -182,19 +130,46 @@ public class GameHandler
 		}
 		plugin.logger.info("The world has been deregistered");
 	}
-	public boolean isSpectator(ArenaPlayer player)
+	
+	// Return Lists: These will return a set of lists for players for games to manipulate.
+	
+	//   GetPlayers will get all the players that are registered (which should be all the players)
+	public List<ArenaPlayer> getPlayers()
 	{
-		return spectators.contains(player);
+		List<ArenaPlayer> list = new ArrayList<ArenaPlayer>();
+		list.addAll(gamePlayers.values());
+		return list;
 	}
+	//   GetSpectators will return all players who have opted to be a spectator.  Specators are defined by a special state.
 	public List<ArenaPlayer> getSpectators()
 	{
-		return spectators;
+		List<ArenaPlayer> list = new ArrayList<ArenaPlayer>();
+		for(int i = 0; i < this.getPlayers().size(); i++)
+		{
+			if(this.getPlayers().get(i).getState() instanceof StateSpectator){list.add(gamePlayers.get(i));}
+		}
+		return list;
 	}
+	//   GetActivePlayers will return all players who want to play the game (this discludes gamemasters and specators)
 	public List<ArenaPlayer> getActivePlayers()
 	{
 		List<ArenaPlayer> list = new ArrayList<ArenaPlayer>();
 		list.addAll(gamePlayers.values());
-		list.removeAll(spectators);
+		for(int i = 0; i < list.size(); i++)
+		{
+			if(list.get(i).getState() instanceof StateSpectator){list.remove(list.get(i));}
+			if(list.get(i).getState() instanceof StateGM){list.remove(list.get(i));}
+		}
+		return list;
+	}
+	//   GetSpectators will return all players who have opted to be a spectator.  Specators are defined by a special state.
+	public List<ArenaPlayer> getGameMasters()
+	{
+		List<ArenaPlayer> list = new ArrayList<ArenaPlayer>();
+		for(int i = 0; i < this.getPlayers().size(); i++)
+		{
+			if(this.getPlayers().get(i).getState() instanceof StateGM){list.add(gamePlayers.get(i));}
+		}
 		return list;
 	}
 	public void messagePlayers(String message, List<ArenaPlayer> players)
@@ -277,7 +252,10 @@ public class GameHandler
 	}
 	
 	// GETTERS: These return information and objects.
-	
+	public Scoreboard getScoreboard()
+	{
+		return board;
+	}
 	public List<String> getGameNames()
 	{
 		List<String> list = new ArrayList<String>();
@@ -298,17 +276,13 @@ public class GameHandler
 		list.addAll(gameTypes.values());
 		return list;
 	}
-	public List<ArenaPlayer> getPlayers()
-	{
-		List<ArenaPlayer> list = new ArrayList<ArenaPlayer>();
-		list.addAll(gamePlayers.values());
-		return list;
-	}
 	public int getPlayerCount()
 	{
 		List<ArenaPlayer> players = this.getPlayers();
 		return players.size();
 	}
+	
+	// Player getters (For converting player>>arenaplayer
 	public ArenaPlayer getPlayer(Player player)
 	{
 		String name = player.getName();
@@ -319,10 +293,7 @@ public class GameHandler
 		return gamePlayers.get(name);
 	}
 	
-	public Scoreboard getBoard()
-	{
-		return board;
-	}
+	// Handler getters
 	public TaskHandler getTaskHandler()
 	{
 		return taskHandler;
@@ -342,10 +313,6 @@ public class GameHandler
 	public StateHandler getStateHandler()
 	{
 		return stateHandler;
-	}
-	public List<ArenaPlayer> getHiddenPlayers()
-	{
-		return hiddenPlayers;
 	}
 	
 	// SETTERS: These will set information and objects to the gameHandler.

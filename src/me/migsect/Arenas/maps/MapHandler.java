@@ -117,14 +117,19 @@ public class MapHandler
 	private Location generateLocation(World world, String rawLoc)
 	{
 		String[] splited = rawLoc.split(" ");
-		int x = 0;
-		int y = 0;
-		int z = 0;
+		double x = 0;
+		double y = 0;
+		double z = 0;
 		try
 		{
 			x = Integer.parseInt(splited[0]);
 			y = Integer.parseInt(splited[1]);
 			z = Integer.parseInt(splited[2]);
+			if(x >= 0) x +=.5;
+			else x -=.5;
+			if(z >= 0) z +=.5;
+			else x -=.5;
+			y += 1;
 		}
 		catch (NumberFormatException e)
 		{

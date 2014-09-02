@@ -58,7 +58,7 @@ public abstract class ArenaTeam
 		this.game = game;
 		this.teamTag = tag;
 		this.teamName = game.getTag() + tag;
-		Scoreboard board = plugin.gameHandler.getBoard();
+		Scoreboard board = plugin.gameHandler.getScoreboard();
 		team = board.registerNewTeam(this.teamName);
 		
 		members = new ArrayList<ArenaPlayer>();

@@ -1,7 +1,5 @@
 package me.migsect.Arenas.Commands;
 
-import java.util.List;
-
 import me.migsect.Arenas.ArenaHelper;
 import me.migsect.Arenas.Arenas;
 
@@ -24,18 +22,13 @@ public class CommandCommands extends ArenaCommand
 		this.setMaxArgs(0);
 	}
 	
-	
+	// Just a note: commands cannot be bigger than 12 chars, this is to make them easier to type.
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd,
 			String commandLabel, String[] args)
 	{
 		Player player = (Player) sender;
-		player.sendMessage(ArenaHelper.colorEncoding("&6Available Commands:"));
-		List<ArenaCommand> commands = plugin.commandHandler.getCommands();
-		for(int i = 0; i < commands.size();i++)
-		{
-			player.sendMessage(ArenaHelper.colorEncoding(" &e- &d/a " + commands.get(i).getTag() + " &e: " + commands.get(i).getInfo()));
-		}
+		player.sendMessage(ArenaHelper.colorEncoding("&6For more commands use &d/a help &6for basic command use."));
 		return true;
 	}
 

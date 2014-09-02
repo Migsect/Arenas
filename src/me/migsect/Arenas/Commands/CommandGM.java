@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.migsect.Arenas.ArenaHelper;
 import me.migsect.Arenas.Arenas;
 import me.migsect.Arenas.Players.ArenaPlayer;
 
@@ -33,10 +34,12 @@ public class CommandGM extends ArenaCommand
 		if(player.getState().getTag().equalsIgnoreCase("gamm"))
 		{
 			player.setState(plugin.gameHandler.getStateHandler().getUniversal("lobb"));
+			player.getPlayer().sendMessage(ArenaHelper.colorEncoding("&eYou are now in a Lobby State"));
 		}
 		else
 		{
 			player.setState(plugin.gameHandler.getStateHandler().getUniversal("gamm"));
+			player.getPlayer().sendMessage(ArenaHelper.colorEncoding("&eYou are now in a GameMaster State"));
 		}
 		return true;
 	}

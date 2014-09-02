@@ -5,10 +5,12 @@ import java.util.logging.Logger;
 import me.migsect.Arenas.Commands.CommandGM;
 import me.migsect.Arenas.Commands.CommandHandler;
 import me.migsect.Arenas.Commands.CommandCommands;
+import me.migsect.Arenas.Commands.CommandHelp;
 import me.migsect.Arenas.Commands.CommandInfo;
 import me.migsect.Arenas.Commands.CommandList;
 import me.migsect.Arenas.Commands.CommandLoadGame;
 import me.migsect.Arenas.Commands.CommandLoadMap;
+import me.migsect.Arenas.Commands.CommandMapTeleport;
 import me.migsect.Arenas.Commands.CommandShowState;
 import me.migsect.Arenas.Commands.CommandStart;
 import me.migsect.Arenas.Commands.CommandStop;
@@ -32,7 +34,7 @@ public class Arenas extends JavaPlugin
 	public final Logger logger = Logger.getLogger("Minecraft");
 	public GameHandler gameHandler;
 	public CommandHandler commandHandler;
-	public ConfigAccessor mapConfig = new ConfigAccessor(this,"maps.yml");
+	public ConfigAccessor mapConfig;
 	
 	
 	// Enabling
@@ -55,6 +57,7 @@ public class Arenas extends JavaPlugin
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 		
+		mapConfig  = new ConfigAccessor(this,"maps.yml");
 		mapConfig.getConfig().options().copyDefaults(true);
 		mapConfig.saveConfig();
 		
@@ -101,6 +104,8 @@ public class Arenas extends JavaPlugin
 		commandHandler.register(new CommandStart(this));
 		commandHandler.register(new CommandStop(this));
 		commandHandler.register(new CommandShowState(this));
+		commandHandler.register(new CommandMapTeleport(this));
+		commandHandler.register(new CommandHelp(this));
 	}
 
 

@@ -41,7 +41,6 @@ public class StateSpectator extends ArenaPlayerState
 	public void enterState(ArenaPlayer player)
 	{
 		player.getPlayer().setAllowFlight(true);
-		handler.addHidden(player);
 		player.getPlayer().setGameMode(mode);
 	}
 
@@ -49,7 +48,6 @@ public class StateSpectator extends ArenaPlayerState
 	public void leaveState(ArenaPlayer player)
 	{
 		player.getPlayer().setAllowFlight(false);
-		handler.removeHidden(player);
 		player.getPlayer().setGameMode(GameMode.SURVIVAL);
 		removeAllEffects(player);
 	}

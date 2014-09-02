@@ -27,7 +27,7 @@ public class TeamMiners extends ArenaTeam
 		PotionEffect effect1 = new PotionEffect(PotionEffectType.SATURATION, 3600, 5, false);
 		effects.add(effect1);
 		
-		Scoreboard board = plugin.gameHandler.getBoard();
+		Scoreboard board = plugin.gameHandler.getScoreboard();
 		team = board.registerNewTeam("ends.Miners");
 		team.setPrefix("" + ChatColor.GREEN);
 		team.setCanSeeFriendlyInvisibles(false);
