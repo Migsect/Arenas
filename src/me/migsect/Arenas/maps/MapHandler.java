@@ -52,6 +52,7 @@ public class MapHandler
 		
 		// This will set up the spawnHandler to handler the new spawns for the map.
 		SpawnHandler spawnHandler = gameHandler.getSpawnHandler();
+		spawnHandler.emptySpawns();
 		spawnHandler.addList(map.getGenSpawns());
 		List<ArenaTeam> teams = gameHandler.getLoadedGame().getTeams();
 		for(int i = 0; i < teams.size(); i++)

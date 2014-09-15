@@ -49,6 +49,7 @@ public class CombatListener implements Listener
 		
 	}
 	*/
+	@SuppressWarnings("deprecation")
 	@EventHandler 
 	// Handles:
 	//  - entityDeathEvent
@@ -75,6 +76,23 @@ public class CombatListener implements Listener
 				if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerKillEntity(plugin.gameHandler.getPlayer((Player) killer),entity);
 				plugin.gameHandler.getPlayer((Player) killer).getTeam().onListenPlayerKillEntity(plugin.gameHandler.getPlayer((Player) killer), entity);
 			}
+			else if(killer instanceof Arrow)
+			{
+				Arrow arrow = (Arrow) killer;
+				Entity shooter = arrow.getShooter();
+				if(shooter instanceof Player)
+				{
+					ArenaPlayer shooterPlayer = plugin.gameHandler.getPlayer((Player)shooter);
+					if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerKillEntity(shooterPlayer,entity);
+					if(shooterPlayer.hasTeam()) shooterPlayer.getTeam().onListenPlayerKillEntity(shooterPlayer, entity);
+					return;
+				}
+				else // shooter is not a player and something else
+				{
+					// Do nothing for now.
+					return;
+				}
+			}
 			else // Killer is not a player.
 			{
 				if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenEntityKillEntity(killer, entity);
@@ -100,29 +118,30 @@ public class CombatListener implements Listener
 		if(!player.canDeathDrop()) event.getDrops().clear();
 
 		player.setLastDeathLocation(player.getPlayer().getLocation());
-		if(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
+		if(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) // if the death was caused by an entity.
 		{
 			EntityDamageByEntityEvent cause = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
 			if(cause.getDamager() instanceof Player)
-    	{
-    		ArenaPlayer killer = plugin.gameHandler.getPlayer((Player) cause.getDamager());
-    		plugin.gameHandler.getLoadedGame().onListenPlayerKillPlayer(killer, player);
-    		if(player.hasTeam()) player.getTeam().onListenPlayerKillPlayer(killer, player);
-    	}
-    	else if (cause.getDamager() instanceof Entity)
-    	{
-    		Entity killer = event.getEntity().getLastDamageCause().getEntity();
-    		plugin.gameHandler.getLoadedGame().onListenEntityKillPlayer(killer, player);
-    		if(player.hasTeam()) player.getTeam().onListenEntityKillPlayer(killer, player);
-    	}
+			{
+	    		ArenaPlayer killer = plugin.gameHandler.getPlayer((Player) cause.getDamager());
+	    		plugin.gameHandler.getLoadedGame().onListenPlayerKillPlayer(killer, player);
+	    		if(player.hasTeam()) player.getTeam().onListenPlayerKillPlayer(killer, player);
+			}
+	    	else if (cause.getDamager() instanceof Entity)
+	    	{
+	    		Entity killer = event.getEntity().getLastDamageCause().getEntity();
+	    		plugin.gameHandler.getLoadedGame().onListenEntityKillPlayer(killer, player);
+	    		if(player.hasTeam()) player.getTeam().onListenEntityKillPlayer(killer, player);
+	    	}
 		}
-  	else // The death is caused by nature.
-  	{
-  		DamageCause cause = event.getEntity().getLastDamageCause().getCause();
-  		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenEnviromentKillPlayer(player, cause);
-  		if(player.hasTeam()) player.getTeam().onListenEnviromentKillPlayer(player, cause);
-  	}
+		else // The death is caused by nature.
+      	{
+      		DamageCause damageCause = event.getEntity().getLastDamageCause().getCause();
+      		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenEnviromentKillPlayer(player, damageCause);
+      		if(player.hasTeam()) player.getTeam().onListenEnviromentKillPlayer(player, damageCause);
+      	}
 	}
+	
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event)
 	{
@@ -159,7 +178,7 @@ public class CombatListener implements Listener
 		if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onEventEntityDamagedByEntity(event);
 		if(event.isCancelled()) return;
 		
-		if(event.getEntity() instanceof Player)
+		if(event.getEntity() instanceof Player) // If the entity being attacked is a player.
 		{
 			ArenaPlayer player = plugin.gameHandler.getPlayer((Player)event.getEntity());
 			Entity attacker = event.getDamager();
@@ -180,7 +199,7 @@ public class CombatListener implements Listener
 				if(player.hasTeam()) player.getTeam().onListenPlayerAttackPlayer(attackerPlayer, player);
 				if(attackerPlayer.hasTeam()) attackerPlayer.getTeam().onListenPlayerAttackPlayer(attackerPlayer, player);
 			}
-			else if(attacker instanceof Arrow)
+			else if(attacker instanceof Arrow) // Arrow Hit/Shoot handling
 			{
 				Arrow projectile = (Arrow) attacker;
 				if(!player.canCollide()) // Do note that before a more elegant solution can be achieved, this is a spectator only thing.
@@ -220,6 +239,14 @@ public class CombatListener implements Listener
 					}
 					if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerArrowHit(attackerPlayer, projectile);
 					if(attackerPlayer.hasTeam()) attackerPlayer.getTeam().onListenPlayerArrowHit(attackerPlayer, projectile);
+					
+					if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerHitByArrow(player, projectile);
+					if(attackerPlayer.hasTeam()) attackerPlayer.getTeam().onListenPlayerHitByArrow(player, projectile);
+					
+					if(plugin.gameHandler.isGameLoaded()) plugin.gameHandler.getLoadedGame().onListenPlayerAttackPlayer(attackerPlayer, player);
+					if(attackerPlayer.hasTeam()) attackerPlayer.getTeam().onListenPlayerAttackPlayer(attackerPlayer, player);
+					
+					
 				}
 				else if(projectile.getShooter() instanceof Entity)
 				{
